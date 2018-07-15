@@ -20,6 +20,8 @@ executable file-processor
   ghc-options:         -Wall -threaded -O2
   other-modules:       Foundation
                        Dispatch
+                       Config
+                       Model
                        Handler.Home
                        Handler.Preview
                        Handler.Download
@@ -37,4 +39,9 @@ executable file-processor
                     ,  stm
                     ,  text
                     ,  yesod
+                    ,  persistent 
+                    -- ,  persistent-template 
+                    ,  persistent-postgresql
+                    ,  yesod-persistent
+                    , monad-logger
 

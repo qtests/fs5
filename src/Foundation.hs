@@ -17,10 +17,13 @@ import Data.Default
 import Data.IntMap (IntMap)
 import qualified Data.IntMap as IntMap
 import Data.Text (Text)
-import qualified Data.Text as Text()
+import qualified Data.Text as Text
+import Database.Persist.Sql
 import Text.Hamlet
 import Yesod
 import Yesod.Default.Util
+
+import Config
 
 -- | Extend this record to hold any information about uploaded files that you
 -- need. Examples might be the time at which a file was uploaded, or the
@@ -50,6 +53,7 @@ type Store = IntMap StoredFile
 data App = App
     { tnextId :: TVar Int
     , tstore :: TVar Store
+    , connPool :: ConnectionPool
     }
 
 instance Yesod App where
@@ -65,6 +69,13 @@ instance Yesod App where
 instance RenderMessage App FormMessage where
   renderMessage _ _ = defaultFormMessage
 
+
+instance YesodPersist App where
+    type YesodPersistBackend App = SqlBackend
+    runDB = defaultRunDB (const persistConfig) connPool 
+  
+instance YesodPersistRunner App where
+    getDBRunner = defaultGetDBRunner connPool
 -- Calling 'mkYesodData' generates boilerplate code and type aliases for
 -- interfacing our foundation type with Yesod. The "Dispatch" module contains
 -- a call to 'mkYesodDispatch', which performs the other half of boilerplate
