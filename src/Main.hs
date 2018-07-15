@@ -9,7 +9,7 @@ import Yesod
 import Database.Persist.Sql
 
 import Control.Monad.Logger
-
+import Control.Monad.Trans.Resource
 import Dispatch ()
 import Foundation
 import Config
@@ -18,6 +18,7 @@ import Model (migrateAll)
 main :: IO ()
 main = do
     pool <- createPoolConfig persistConfig
+    runResourceT $ runStderrLoggingT $ flip runSqlPool pool $ runMigration migrateAll
     -- Initialize the filestore to an empty map.
     tstore <- atomically $ newTVar empty
     -- The first uploaded file should have an ID of 0.

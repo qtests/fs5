@@ -17,7 +17,7 @@ import  Database.Persist.Postgresql
 -- persistConfig = SqliteConf "database" 100
 
 persistConfig :: PostgresConf
-persistConfig = PostgresConf "host=localhost dbname=perscotty user=ii password=ii port=5432" 100
+persistConfig = PostgresConf "host=localhost dbname=database user=ii password=ii port=5432" 100
 
 
 
