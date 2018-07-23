@@ -43,5 +43,7 @@ executable file-processor
                     -- ,  persistent-template 
                     ,  persistent-postgresql
                     ,  yesod-persistent
-                    , monad-logger
+                    ,  monad-logger
+                    --
+                    ,  read-env-var
 

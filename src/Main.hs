@@ -15,9 +15,16 @@ import Foundation
 import Config
 import Model (migrateAll)
 
+import System.ReadEnvVar (lookupEnvDef, readEnvDef)
+
 main :: IO ()
 main = do
-    pool <- createPoolConfig persistConfig
+    -- Add 
+    -- dbConnNum <- readEnvDef "DATABASE_CONNECTION_NUM" 10
+    -- dbConnectionString <- lookupEnvDef "DATABASE_URL"
+    --               "postgres://mydbuser:mydbpass@localhost:5432/mydb"
+
+    pool <- createPoolConfig $ persistConfig
     runResourceT $ runStderrLoggingT $ flip runSqlPool pool $ runMigration migrateAll
     -- Initialize the filestore to an empty map.
     tstore <- atomically $ newTVar empty
@@ -26,4 +33,6 @@ main = do
     -- warpEnv starts the Warp server over a port defined by an environment
     -- variable. To launch the app on a specific port use 'warp'.
     -- warpEnv $ App tident tstore
-    warpEnv $ App tident tstore pool
+
+    port <- readEnvDef "PORT" 8080
+    warp port $ App tident tstore pool
