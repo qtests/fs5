@@ -7,11 +7,16 @@ module Config where
 
 -- import Database.Persist.Sqlite
 import  Database.Persist.Postgresql
+import  System.ReadEnvVar (lookupEnvDef, readEnvDef)
 
 
-persistConfig :: PostgresConf
-persistConfig = PostgresConf "host=localhost dbname=mydb user=mydbuser password=mydbpass port=5432" 100
--- persistConfig = PostgresConf "postgres://mydbuser:mydbpass@localhost:5432/mydb" 100
+perstConfig :: IO PostgresConf
+perstConfig  = do 
+    dbConnNum <- readEnvDef "DATABASE_CONNECTION_NUM" 100
+    dbConnectionString <- lookupEnvDef "DATABASE_URL" "postgres://mydbuser:mydbpass@localhost:5432/mydb"
+    return $ PostgresConf dbConnectionString dbConnNum
+
+
 
 
 

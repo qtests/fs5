@@ -2,7 +2,6 @@
 
 -- | This module initializes the application's state and starts the warp server.
 module Main where
-
 import Control.Concurrent.STM
 import Data.IntMap
 import Yesod
@@ -19,12 +18,11 @@ import System.ReadEnvVar (lookupEnvDef, readEnvDef)
 
 main :: IO ()
 main = do
-    -- Add 
-    -- dbConnNum <- readEnvDef "DATABASE_CONNECTION_NUM" 10
-    -- dbConnectionString <- lookupEnvDef "DATABASE_URL"
-    --               "postgres://mydbuser:mydbpass@localhost:5432/mydb"
+   
+    
+    persistConfig <- perstConfig
 
-    pool <- createPoolConfig $ persistConfig
+    pool <- createPoolConfig persistConfig 
     runResourceT $ runStderrLoggingT $ flip runSqlPool pool $ runMigration migrateAll
     -- Initialize the filestore to an empty map.
     tstore <- atomically $ newTVar empty
@@ -35,4 +33,4 @@ main = do
     -- warpEnv $ App tident tstore
 
     port <- readEnvDef "PORT" 8080
-    warp port $ App tident tstore pool
+    warp port $ App tident tstore pool persistConfig

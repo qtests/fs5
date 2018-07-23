@@ -23,6 +23,8 @@ import Text.Hamlet
 import Yesod
 import Yesod.Default.Util
 
+import  Database.Persist.Postgresql(PostgresConf)
+
 import Config
 
 -- | Extend this record to hold any information about uploaded files that you
@@ -54,6 +56,7 @@ data App = App
     { tnextId :: TVar Int
     , tstore :: TVar Store
     , connPool :: ConnectionPool
+    , persistConfig ::  PostgresConf
     }
 
 instance Yesod App where
@@ -72,8 +75,9 @@ instance RenderMessage App FormMessage where
 
 instance YesodPersist App where
     type YesodPersistBackend App = SqlBackend
-    runDB = defaultRunDB (const persistConfig) connPool 
-  
+    -- runDB = defaultRunDB (const perstConfig) connPool 
+    runDB = defaultRunDB persistConfig connPool 
+
 instance YesodPersistRunner App where
     getDBRunner = defaultGetDBRunner connPool
 -- Calling 'mkYesodData' generates boilerplate code and type aliases for
