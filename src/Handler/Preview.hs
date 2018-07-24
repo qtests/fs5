@@ -19,9 +19,12 @@ import Yesod
 import Yesod.Default.Util
 
 import Foundation
+import Model
+
 
 -- | The preview page display's the file's name, a hyperlink to download it, and a preview.
-getPreviewR :: Int -> Handler Html
+-- getPreviewR :: Int -> Handler Html
+getPreviewR :: Key StoredFile -> Handler Html
 getPreviewR ident = do
     StoredFile filename contentType bytes <- getById ident
     defaultLayout $ do
@@ -31,7 +34,8 @@ getPreviewR ident = do
 
 -- | Generate a block of HTML to include in the preview section.
 -- preview :: Int -> Text -> LB.ByteString -> IO Widget
-preview :: Int -> Text -> SB.ByteString -> IO Widget
+-- preview :: Int -> Text -> SB.ByteString -> IO Widget
+preview :: Key StoredFile -> Text -> SB.ByteString -> IO Widget
 preview ident contentType bytes
   -- Image files have a MIME type starting with "image" by convention.
   | "image/" `Text.isPrefixOf` contentType =
