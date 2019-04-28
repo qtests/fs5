@@ -4,7 +4,7 @@ $if null storedFiles
 $else
   <ul>
 $#    $forall (ident, StoredFile filename _ _) <- storedFiles
-    $forall (Entity ident (StoredFile filename _ _)) <- storedFiles
+    $forall (Entity ident (StoredFile filename _ _ _ _ _)) <- storedFiles
       <li>
         <a href=@{PreviewR ident}>#{filename}
 <h2>Submit new file

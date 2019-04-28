@@ -4,27 +4,40 @@
 module Main where
 -- import Control.Concurrent.STM
 -- import Data.IntMap
+
+import Servant
+
 import Yesod
 import Database.Persist.Sql
+import Data.Text
+import Data.Pool (Pool(..))
 
-import Control.Monad.Logger
-import Control.Monad.Trans.Resource
 
 import Dispatch ()
 import Foundation
 import Config
-import Model (migrateAll)
+import Model (migrateAll, getAllFilesNames, dbFunction)
+import API
 
 import System.ReadEnvVar (lookupEnvDef, readEnvDef)
+import Control.Monad.Trans.Resource (ResourceT, runResourceT)
+import Control.Monad.Logger (LoggingT, runStderrLoggingT)
+
+
+appAPIServerMock :: [Text] -> Server AppAPI
+appAPIServerMock servData  = return $ toJSON servData
 
 main :: IO ()
 main = do
    
-    
     persistConfig <- perstConfig
 
     pool <- createPoolConfig persistConfig 
     runResourceT $ runStderrLoggingT $ flip runSqlPool pool $ runMigration migrateAll
+
+    fileNames <- dbFunction getAllFilesNames pool
+    let api = serve appAPIProxy (appAPIServerMock fileNames)
+
     -- Initialize the filestore to an empty map.
     --tstore <- atomically $ newTVar empty
 
@@ -37,4 +50,4 @@ main = do
 
     port <- readEnvDef "PORT" 8080
     -- warp port $ App tident tstore pool persistConfig
-    warp port $ App pool persistConfig
+    warp port $ App pool persistConfig (EmbeddedAPI api)

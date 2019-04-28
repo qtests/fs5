@@ -27,6 +27,7 @@ import  Database.Persist.Postgresql(PostgresConf)
 
 import Config
 import Model
+import API
 
 -- | Extend this record to hold any information about uploaded files that you
 -- need. Examples might be the time at which a file was uploaded, or the
@@ -62,6 +63,7 @@ import Model
 data App = App
     {   connPool :: ConnectionPool
       , persistConfig ::  PostgresConf
+      , appAPI :: EmbeddedAPI
     }
 
 instance Yesod App where

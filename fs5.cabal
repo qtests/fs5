@@ -22,6 +22,7 @@ executable file-processor
                        Dispatch
                        Config
                        Model
+                       API
                        Handler.Home
                        Handler.Preview
                        Handler.Download
@@ -32,7 +33,6 @@ executable file-processor
                     ,  conduit-extra
                     ,  containers
                     ,  data-default
-                    ,  hamlet
                     ,  resourcet
                     ,  safe
                     ,  shakespeare
@@ -46,4 +46,11 @@ executable file-processor
                     ,  monad-logger
                     --
                     ,  read-env-var
+                    ,  time
+                    ,  wai
+                    ,  servant-server
+                    ,  yesod-core
+                    ,  transformers
+                    ,  resource-pool
+
 
